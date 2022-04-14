@@ -20,9 +20,10 @@ struct ContentView: View {
                     }
                 }
             }
+            .navigationTitle(rootWord)
+            .onSubmit(addNewWord) //on submit need a func that have no parameters and return no value like our addNewWord
+            .onAppear(perform: startGame)
         }
-        .navigationTitle(rootWord)
-        .onSubmit(addNewWord) //on submit need a func that have no parameters and return no value like our addNewWord
     }
     
     //func that have no parameters and return no value
@@ -35,6 +36,18 @@ struct ContentView: View {
         }
         newWord = ""
         
+    }
+    
+    func startGame(){
+        if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt"){
+            if let startWords = try? String (contentsOf: startWordsURL) {
+                let allWords = startWords.components(separatedBy: "\n")
+                rootWord = allWords.randomElement() ?? "silkworm"
+                return
+            }
+        }
+        
+        fatalError("Could not load start.txt file")
     }
 }
 
